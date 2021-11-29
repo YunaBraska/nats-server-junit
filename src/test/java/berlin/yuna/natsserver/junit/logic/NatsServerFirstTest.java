@@ -1,6 +1,5 @@
-package berlin.yuna.natsserver.junit;
+package berlin.yuna.natsserver.junit.logic;
 
-import berlin.yuna.natsserver.junit.logic.NatsServer;
 import berlin.yuna.natsserver.junit.model.annotation.JUnitNatsServer;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;

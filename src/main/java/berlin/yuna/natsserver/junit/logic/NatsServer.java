@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,7 +22,7 @@ import static berlin.yuna.natsserver.config.NatsConfig.NATS_CONFIG_FILE;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_DOWNLOAD_URL;
 import static berlin.yuna.natsserver.config.NatsConfig.PORT;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("java:S2386")
 public class NatsServer implements BeforeAllCallback, AfterAllCallback, ArgumentsProvider {
 
     private Nats nats;
@@ -34,7 +33,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     public static final List<NatsServer> NATS_SERVER_LIST = new CopyOnWriteArrayList<>();
 
     @Override
-    public void beforeAll(final ExtensionContext context) throws Exception {
+    public void beforeAll(final ExtensionContext context) {
         context.getElement().map(annotation -> annotation.getAnnotation(JUnitNatsServer.class)).ifPresent(config -> {
             nats = new Nats();
             timeoutMs = config.timeoutMs();
@@ -61,7 +60,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     @Override
-    public void afterAll(final ExtensionContext context) throws Exception {
+    public void afterAll(final ExtensionContext context) {
         if (nats != null) {
             nats.stop(timeoutMs);
             NATS_SERVER_LIST.remove(this);
@@ -69,7 +68,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     @Override
-    public Stream<? extends Arguments> provideArguments(final ExtensionContext extensionContext) throws Exception {
+    public Stream<? extends Arguments> provideArguments(final ExtensionContext extensionContext) {
         return NATS_SERVER_LIST.stream().map(Arguments::of);
     }
 
@@ -108,7 +107,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     private static boolean containsText(final CharSequence str) {
-        int strLen = str.length();
+        final int strLen = str.length();
 
         for (int i = 0; i < strLen; ++i) {
             if (!Character.isWhitespace(str.charAt(i))) {
@@ -120,10 +119,10 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NatsServer that = (NatsServer) o;
+        final NatsServer that = (NatsServer) o;
         return pid == that.pid && port == that.port && Objects.equals(host, that.host);
     }
 

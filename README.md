@@ -48,7 +48,7 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
     * [Nats-Server-JUnit](https://github.com/YunaBraska/nats-server-junit)
 * Nats for **Spring Boot**
     * [Nats-Server-Embedded](https://github.com/YunaBraska/nats-server-embedded)
-    * [nats-server-junit](https://github.com/YunaBraska/nats-server-junit)
+    * [Nats-Streaming-Server-Embedded](https://github.com/YunaBraska/nats-streaming-server-embedded)
 
 ### Usage
 
@@ -57,7 +57,7 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
 <dependency>
   <groupId>berlin.yuna</groupId>
   <artifactId>nats-server-junit</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.16</version>
 </dependency>
 ```
 

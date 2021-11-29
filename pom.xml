@@ -6,7 +6,7 @@
 
     <groupId>berlin.yuna</groupId>
     <artifactId>nats-server-junit</artifactId>
-    <version>0.0.15</version>
+    <version>0.0.16</version>
 
     <name>nats-server-junit</name>
     <description>Nats server embedded for testing which contains the original Nats server
@@ -29,7 +29,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
