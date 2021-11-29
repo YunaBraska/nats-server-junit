@@ -16,7 +16,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 
 @Tag("IntegrationTest")
-@JUnitNatsServer(port = 4680, timeoutMs = 10000, configFile = "my.properties", downloadUrl = "https://example.com", binaryFile = "/tmp/natsserver", config = {"ADDR", "localhost"})
+@JUnitNatsServer(port = 4680)
 class NatsServerFirstTest {
 
     private NatsServer previousNats;
