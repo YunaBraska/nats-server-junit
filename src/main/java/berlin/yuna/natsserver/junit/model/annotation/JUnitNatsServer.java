@@ -28,6 +28,11 @@ public @interface JUnitNatsServer {
     long timeoutMs() default 10000;
 
     /**
+     * Nats server name
+     */
+    String name() default "";
+
+    /**
      * Config file
      */
     String configFile() default "";
@@ -47,4 +52,9 @@ public @interface JUnitNatsServer {
      * {@link berlin.yuna.natsserver.config.NatsConfig}
      */
     String[] config() default {};
+
+    /**
+     * Prevents the {@link NatsServer} from recreating for each test class
+     */
+    boolean keepAlive() default false;
 }

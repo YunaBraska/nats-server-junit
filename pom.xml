@@ -6,7 +6,7 @@
 
     <groupId>berlin.yuna</groupId>
     <artifactId>nats-server-junit</artifactId>
-    <version>0.0.18</version>
+    <version>0.0.19</version>
 
     <name>nats-server-junit</name>
     <description>Nats server embedded for testing which contains the original Nats server

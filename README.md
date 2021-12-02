@@ -72,7 +72,7 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
 @JUnitNatsServer(port = 4680)
 class NatsServerFirstTest {
 
-  final NatsServer natsServer = NATS_SERVER_LIST.iterator().next();
+  final NatsServer natsServer = getNatsServer();
 
   @Test
   void natsServerShouldStart() {
@@ -103,7 +103,7 @@ class NatsServerFirstTest {
 @JUnitNatsServer(port = 4680, timeoutMs = 10000, configFile = "my.properties", downloadUrl = "https://example.com", binaryFile = "/tmp/natsserver", config = {"ADDR", "localhost"})
 class NatsServerFirstTest {
 
-  final NatsServer natsServer = NATS_SERVER_LIST.iterator().next();
+  final NatsServer natsServer = getNatsServer();
 
   @Test
   void natsServerShouldStart() {
@@ -119,11 +119,27 @@ class NatsServerFirstTest {
 @JUnitNatsServer(port = -1)
 class NatsServerFirstTest {
 
-  final NatsServer natsServer = NATS_SERVER_LIST.iterator().next();
+  final NatsServer natsServer = getNatsServer();
 
   @Test
   void natsServerShouldStart() {
     assertThat(natsServer, is(notNullValue()));
+  }
+}
+```
+
+* Test with nats started only one time in the whole test context with `keepAlive` flag
+
+```java
+
+@JUnitNatsServer(port = -1, name = "RandomNats", keepAlive = true)
+class NatsServerKeepAliveFirstTest {
+
+  @Test
+  void natsServerShouldStart() {
+    final NatsServer natsServer = getNatsServerByName("RandomNats");
+    assertThat(natsServer, is(notNullValue()));
+    assertThat(natsServer.getPort(), is(not(-1)));
   }
 }
 ```
