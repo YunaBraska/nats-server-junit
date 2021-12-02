@@ -57,7 +57,7 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
 <dependency>
   <groupId>berlin.yuna</groupId>
   <artifactId>nats-server-junit</artifactId>
-  <version>0.0.16</version>
+  <version>0.0.19</version>
 </dependency>
 ```
 
