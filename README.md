@@ -1,6 +1,9 @@
 ![logo](src/test/resources/nats-junit.png)
 
 # nats-server-junit
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?hosted_button_id=HFHFUT3G6TZF6)
+
 A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-server)
 
 [![Build][build_shield]][build_link]
