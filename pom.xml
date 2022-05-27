@@ -6,7 +6,7 @@
 
     <groupId>berlin.yuna</groupId>
     <artifactId>nats-server-junit</artifactId>
-    <version>0.0.41</version>
+    <version>0.0.42</version>
 
     <name>nats-server-junit</name>
     <description>Nats server embedded for testing which contains the original Nats server
@@ -40,7 +40,7 @@
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
         <!-- VERSIONS -->
-        <nats-server.version>2.6.35</nats-server.version>
+        <nats-server.version>2.6.36</nats-server.version>
         <junit-jupiter.version>5.9.0-M1</junit-jupiter.version>
         <hamcrest-core.version>2.2</hamcrest-core.version>
         <!-- VERSIONS BUILD -->
