@@ -18,6 +18,7 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
 [![Javadoc][javadoc_shield]][javadoc_link]
 [![Size][size_shield]][size_shield]
 ![Label][label_shield]
+![Label][java_version]
 
 [build_shield]: https://github.com/YunaBraska/nats-server-junit/workflows/MVN_RELEASE/badge.svg
 [build_link]: https://github.com/YunaBraska/nats-server-junit/actions?query=workflow%3AMVN_RELEASE
@@ -43,5 +44,6 @@ A Unit wrapper of the original [Nats server](https://github.com/nats-io/nats-ser
 [label_shield]: https://img.shields.io/badge/Yuna-QueenInside-blueviolet?style=flat-square
 [gitter_shield]: https://img.shields.io/gitter/room/YunaBraska/nats-server-junit?style=flat-square
 [gitter_link]: https://gitter.im/nats-server-junit/Lobby
+[java_version]: https://img.shields.io/badge/java-17-blueviolet?style=flat-square
 
 For more, have a look to the [Documentation (GitHubPage)](https://yunabraska.github.io/nats-server/) *(You will find Examples, Configs, Spring, Junit, etc.)*

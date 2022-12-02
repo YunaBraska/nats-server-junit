@@ -217,7 +217,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
 
     private void validateKeepAlive(final ExtensionContext context, final JUnitNatsServer config) {
         final Optional<Optional<Class<? extends Extension>>> closeableResource = context.getElement().map(annotation -> annotation.getAnnotation(ExtendWith.class)).map(extendWith -> Arrays.stream(extendWith.value()).filter(aClass -> aClass == NatsServer.class).findFirst());
-        if (config.keepAlive() && !closeableResource.isPresent()) {
+        if (config.keepAlive() && closeableResource.isEmpty()) {
             throw new IllegalStateException("Missing annotation [@ExtendWith(" + NatsServer.class.getSimpleName() + ".class)] in addition of the [keepAlive] flag");
         }
     }
