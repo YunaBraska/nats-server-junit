@@ -1,6 +1,8 @@
 package berlin.yuna.natsserver.junit.logic;
 
 import berlin.yuna.natsserver.config.NatsConfig;
+import berlin.yuna.natsserver.config.NatsOptions;
+import berlin.yuna.natsserver.config.NatsOptionsBuilder;
 import berlin.yuna.natsserver.junit.model.annotation.JUnitNatsServer;
 import berlin.yuna.natsserver.logic.Nats;
 import berlin.yuna.natsserver.model.exception.NatsStartException;
@@ -23,10 +25,13 @@ import java.util.stream.Stream;
 
 import static berlin.yuna.natsserver.config.NatsConfig.ADDR;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_BINARY_PATH;
-import static berlin.yuna.natsserver.config.NatsConfig.NATS_CONFIG_FILE;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_DOWNLOAD_URL;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_LOG_NAME;
+import static berlin.yuna.natsserver.config.NatsConfig.NATS_PROPERTY_FILE;
+import static berlin.yuna.natsserver.config.NatsConfig.NATS_TIMEOUT_MS;
 import static berlin.yuna.natsserver.config.NatsConfig.PORT;
+import static berlin.yuna.natsserver.config.NatsOptions.natsBuilder;
+import static java.util.Optional.ofNullable;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
 @SuppressWarnings({"java:S2386", "unused", "UnusedReturnValue"})
@@ -44,7 +49,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     /**
      * Returns last running {@link NatsServer}
      *
-     * @return {@link NatsServer} or null if no no server is running
+     * @return {@link NatsServer} or null if no server is running
      */
     public static NatsServer getNatsServer() {
         return NATS_SERVER_LIST.isEmpty() ? null : NATS_SERVER_LIST.get(NATS_SERVER_LIST.size() - 1);
@@ -99,18 +104,19 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     public void beforeAll(final ExtensionContext context) {
         context.getElement().map(annotation -> annotation.getAnnotation(JUnitNatsServer.class)).ifPresent(config -> {
             validateKeepAlive(context, config);
-            nats = new Nats();
-            if (config.port() != nats.port()) {
-                nats.config(PORT, String.valueOf(config.port()));
+            final NatsOptionsBuilder options = natsBuilder();
+            if (config.port() != (Integer) PORT.defaultValue()) {
+                options.config(PORT, String.valueOf(config.port()));
             }
-            nats.config(config.config());
-            configure(nats, NATS_CONFIG_FILE, config.configFile());
-            configure(nats, NATS_BINARY_PATH, config.binaryFile());
-            configure(nats, NATS_DOWNLOAD_URL, config.downloadUrl());
-            configure(nats, NATS_LOG_NAME, config.name());
+            options.config(config.config()).timeoutMs(config.timeoutMs());
+            configure(options, NATS_PROPERTY_FILE, config.configFile());
+            configure(options, NATS_BINARY_PATH, config.binaryFile());
+            configure(options, NATS_DOWNLOAD_URL, config.downloadUrl());
+            configure(options, NATS_LOG_NAME, config.name());
+            configure(options, NATS_TIMEOUT_MS, String.valueOf(config.timeoutMs()));
 
             try {
-                start(context, config);
+                start(options.build(), context, config);
                 this.port = nats.port();
                 this.pid = nats.pid();
                 this.host = nats.getValue(ADDR);
@@ -119,7 +125,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
                 this.keepAlive = config.keepAlive();
                 NATS_SERVER_LIST.add(this);
             } catch (Exception e) {
-                nats.stop(config.timeoutMs());
+                nats.close();
                 NATS_SERVER_LIST.remove(this);
                 throw new NatsStartException(e);
             }
@@ -129,7 +135,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     @Override
     public void afterAll(final ExtensionContext context) {
         if (nats != null && !keepAlive) {
-            nats.stop(timeoutMs);
+            nats.close();
             NATS_SERVER_LIST.remove(this);
         }
     }
@@ -141,7 +147,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
 
     @Override
     public Stream<? extends Arguments> provideArguments(final ExtensionContext extensionContext) {
-        return NATS_SERVER_LIST.isEmpty()? Stream.empty() : Stream.of(Arguments.of(NATS_SERVER_LIST.get(NATS_SERVER_LIST.size() - 1)));
+        return NATS_SERVER_LIST.isEmpty() ? Stream.empty() : Stream.of(Arguments.of(NATS_SERVER_LIST.get(NATS_SERVER_LIST.size() - 1)));
     }
 
     public String getConfig(final NatsConfig key) {
@@ -173,16 +179,17 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     public Nats stop() {
-        return nats.stop(timeoutMs);
+        nats.close();
+        return nats;
     }
 
     public Nats getNats() {
         return nats;
     }
 
-    private void configure(final Nats nats, final NatsConfig key, final String value) {
+    private void configure(final NatsOptionsBuilder options, final NatsConfig key, final String value) {
         if (hasText(value)) {
-            nats.config(key, value);
+            options.config(key, value);
         }
     }
 
@@ -202,13 +209,13 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
         return false;
     }
 
-    private void start(final ExtensionContext context, final JUnitNatsServer config) throws Exception {
-        final String stayAliveName = hasText(config.name()) ? config.name() : NATS_LOG_NAME.value();
+    private void start(final NatsOptions options, final ExtensionContext context, final JUnitNatsServer config) {
+        final String stayAliveName = ofNullable(options.config().get(NATS_LOG_NAME)).filter(NatsServer::hasText).orElse(NATS_LOG_NAME.defaultValueStr());
         final NatsServer prevNatsServer = config.keepAlive() ? getNatsServerByName(stayAliveName) : null;
         if (prevNatsServer != null) {
-            nats = prevNatsServer.getNats();
+            this.nats = prevNatsServer.getNats();
         } else {
-            nats.start(config.timeoutMs());
+            this.nats = new Nats(options);
             if (config.keepAlive()) {
                 context.getRoot().getStore(GLOBAL).put(stayAliveName, this);
             }

@@ -3,6 +3,7 @@ package berlin.yuna.natsserver.junit.model.annotation;
 
 import berlin.yuna.natsserver.config.NatsConfig;
 import berlin.yuna.natsserver.junit.logic.NatsServer;
+import berlin.yuna.natsserver.logic.Nats;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Retention;
@@ -48,7 +49,7 @@ public @interface JUnitNatsServer {
     String binaryFile() default "";
 
     /**
-     * Passes the original parameters to {@link berlin.yuna.natsserver.logic.Nats#config(NatsConfig, String)} for startup
+     * Passes the original parameters to {@link Nats#config()} for startup
      * {@link berlin.yuna.natsserver.config.NatsConfig}
      */
     String[] config() default {};
