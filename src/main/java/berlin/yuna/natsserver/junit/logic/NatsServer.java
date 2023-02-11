@@ -125,7 +125,7 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
                 this.keepAlive = config.keepAlive();
                 NATS_SERVER_LIST.add(this);
             } catch (Exception e) {
-                nats.close();
+                ofNullable(nats).ifPresent(Nats::close);
                 NATS_SERVER_LIST.remove(this);
                 throw new NatsStartException(e);
             }
