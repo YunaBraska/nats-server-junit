@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import static berlin.yuna.natsserver.config.NatsConfig.ADDR;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_BINARY_PATH;
-import static berlin.yuna.natsserver.config.NatsConfig.NATS_CONFIG_FILE;
+import static berlin.yuna.natsserver.config.NatsConfig.NATS_PROPERTY_FILE;
 import static berlin.yuna.natsserver.junit.logic.NatsServer.getNatsServer;
 import static berlin.yuna.natsserver.junit.logic.NatsServer.getNatsServerBy;
 import static berlin.yuna.natsserver.junit.logic.NatsServer.getNatsServerByHost;
@@ -30,8 +30,8 @@ class NatsServerCoverageTest {
 
     @Test
     void coverageTest() {
-        assertThat(natsServer.getConfig(NATS_CONFIG_FILE), is("invalid.file.path"));
-        assertThat(natsServer.getConfig(ADDR), is(ADDR.value()));
+        assertThat(natsServer.getConfig(NATS_PROPERTY_FILE), is("invalid.file.path"));
+        assertThat(natsServer.getConfig(ADDR), is(ADDR.defaultValue()));
         assertThat(natsServer.getConfig(NATS_BINARY_PATH), is(nullValue()));
         assertThat(natsServer.getConfig(NATS_BINARY_PATH, () -> "fallback"), is(equalTo("fallback")));
         assertThat(natsServer.getTimeoutMs(), is(equalTo(10000L)));
