@@ -5,6 +5,7 @@ import berlin.yuna.natsserver.config.NatsOptions;
 import berlin.yuna.natsserver.config.NatsOptionsBuilder;
 import berlin.yuna.natsserver.junit.model.annotation.JUnitNatsServer;
 import berlin.yuna.natsserver.logic.Nats;
+import berlin.yuna.natsserver.logic.NatsUtils;
 import berlin.yuna.natsserver.model.exception.NatsStartException;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -23,14 +24,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static berlin.yuna.natsserver.config.NatsConfig.ADDR;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_BINARY_PATH;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_DOWNLOAD_URL;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_LOG_NAME;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_PROPERTY_FILE;
-import static berlin.yuna.natsserver.config.NatsConfig.NATS_TIMEOUT_MS;
+import static berlin.yuna.natsserver.config.NatsConfig.NET;
 import static berlin.yuna.natsserver.config.NatsConfig.PORT;
 import static berlin.yuna.natsserver.config.NatsOptions.natsBuilder;
+import static berlin.yuna.natsserver.logic.NatsUtils.isNotEmpty;
 import static java.util.Optional.ofNullable;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
@@ -108,18 +109,19 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
             if (config.port() != (Integer) PORT.defaultValue()) {
                 options.config(PORT, String.valueOf(config.port()));
             }
-            options.config(config.config()).timeoutMs(config.timeoutMs());
+            options.config(config.config())
+                    .timeoutMs(config.timeoutMs())
+                    .version(isNotEmpty(config.version()) ? config.version() : options.version());
             configure(options, NATS_PROPERTY_FILE, config.configFile());
             configure(options, NATS_BINARY_PATH, config.binaryFile());
             configure(options, NATS_DOWNLOAD_URL, config.downloadUrl());
             configure(options, NATS_LOG_NAME, config.name());
-            configure(options, NATS_TIMEOUT_MS, String.valueOf(config.timeoutMs()));
 
             try {
                 start(options.build(), context, config);
                 this.port = nats.port();
                 this.pid = nats.pid();
-                this.host = nats.getValue(ADDR);
+                this.host = nats.getValue(NET);
                 this.name = nats.getValue(NATS_LOG_NAME);
                 this.timeoutMs = config.timeoutMs();
                 this.keepAlive = config.keepAlive();
@@ -188,29 +190,13 @@ public class NatsServer implements BeforeAllCallback, AfterAllCallback, Argument
     }
 
     private void configure(final NatsOptionsBuilder options, final NatsConfig key, final String value) {
-        if (hasText(value)) {
+        if (isNotEmpty(value)) {
             options.config(key, value);
         }
     }
 
-    private static boolean hasText(final String str) {
-        return str != null && !str.isEmpty() && containsText(str);
-    }
-
-    private static boolean containsText(final CharSequence str) {
-        final int strLen = str.length();
-
-        for (int i = 0; i < strLen; ++i) {
-            if (!Character.isWhitespace(str.charAt(i))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void start(final NatsOptions options, final ExtensionContext context, final JUnitNatsServer config) {
-        final String stayAliveName = ofNullable(options.config().get(NATS_LOG_NAME)).filter(NatsServer::hasText).orElse(NATS_LOG_NAME.defaultValueStr());
+        final String stayAliveName = ofNullable(options.config().get(NATS_LOG_NAME)).filter(NatsUtils::isNotEmpty).orElse(NATS_LOG_NAME.defaultValueStr());
         final NatsServer prevNatsServer = config.keepAlive() ? getNatsServerByName(stayAliveName) : null;
         if (prevNatsServer != null) {
             this.nats = prevNatsServer.getNats();

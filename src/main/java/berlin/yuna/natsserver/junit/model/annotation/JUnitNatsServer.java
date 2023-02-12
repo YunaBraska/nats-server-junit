@@ -1,7 +1,6 @@
 package berlin.yuna.natsserver.junit.model.annotation;
 
 
-import berlin.yuna.natsserver.config.NatsConfig;
 import berlin.yuna.natsserver.junit.logic.NatsServer;
 import berlin.yuna.natsserver.logic.Nats;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,4 +57,9 @@ public @interface JUnitNatsServer {
      * Prevents the {@link NatsServer} from recreating for each test class
      */
     boolean keepAlive() default false;
+
+    /**
+     * Sets the version for the {@link NatsServer}
+     */
+    String version() default "";
 }

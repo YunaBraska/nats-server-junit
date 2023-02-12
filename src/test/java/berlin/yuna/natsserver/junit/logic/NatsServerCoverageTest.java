@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
-import static berlin.yuna.natsserver.config.NatsConfig.ADDR;
+import static berlin.yuna.natsserver.config.NatsConfig.NET;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_BINARY_PATH;
 import static berlin.yuna.natsserver.config.NatsConfig.NATS_PROPERTY_FILE;
 import static berlin.yuna.natsserver.junit.logic.NatsServer.getNatsServer;
@@ -31,7 +31,7 @@ class NatsServerCoverageTest {
     @Test
     void coverageTest() {
         assertThat(natsServer.getConfig(NATS_PROPERTY_FILE), is("invalid.file.path"));
-        assertThat(natsServer.getConfig(ADDR), is(ADDR.defaultValue()));
+        assertThat(natsServer.getConfig(NET), is(NET.defaultValue()));
         assertThat(natsServer.getConfig(NATS_BINARY_PATH), is(nullValue()));
         assertThat(natsServer.getConfig(NATS_BINARY_PATH, () -> "fallback"), is(equalTo("fallback")));
         assertThat(natsServer.getTimeoutMs(), is(equalTo(10000L)));
