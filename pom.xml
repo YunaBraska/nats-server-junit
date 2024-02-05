@@ -43,7 +43,7 @@
         <nats-server.version>2.10.10</nats-server.version>
         <!-- VERSIONS TEST -->
         <semver4j.version>3.1.0</semver4j.version>
-        <junit-jupiter.version>5.10.1</junit-jupiter.version>
+        <junit-jupiter.version>5.10.2</junit-jupiter.version>
         <hamcrest-core.version>2.2</hamcrest-core.version>
         <!-- VERSIONS BUILD -->
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
