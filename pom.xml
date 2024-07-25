@@ -44,7 +44,7 @@
         <!-- VERSIONS TEST -->
         <semver4j.version>3.1.0</semver4j.version>
         <junit-jupiter.version>5.11.0-M2</junit-jupiter.version>
-        <hamcrest-core.version>2.2</hamcrest-core.version>
+        <hamcrest-core.version>3.0-rc1</hamcrest-core.version>
         <!-- VERSIONS BUILD -->
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
