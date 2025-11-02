@@ -6,7 +6,7 @@
 
     <groupId>berlin.yuna</groupId>
     <artifactId>nats-server-junit</artifactId>
-    <version>2.12.1-rc.3</version>
+    <version>2.12.1</version>
 
     <name>nats-server-junit</name>
     <description>Nats server embedded for testing which contains the original Nats server
@@ -42,7 +42,7 @@
 
         <!-- PROD -->
         <junit.version>6.0.1</junit.version>
-        <nats-server.version>2.12.1-rc.0</nats-server.version>
+        <nats-server.version>2.12.1</nats-server.version>
 
         <!-- TEST -->
         <semver4j.version>3.1.0</semver4j.version>
